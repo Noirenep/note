@@ -152,6 +152,27 @@ float32 float64 string
 time duration header
 可变长度数组array[] 固定长度数组array[C]
 ```
+### Client Library C++
+#### ros::init()
+- void ros::init(); //解析ROS参数 为node命名
+
+#### ros::NodeHandle Class类
+常见成员函数
+```cpp
+//创建话题的publisher
+ros::Publisher advertise(const string &topic,uint32_t queue_size)
+//创建话题的subscriber
+ros::Subscriber subscribe(const string &topic,uint32_t queue_size, void(*)(M));
+//创建服务的server
+ros::ServiceServer advertiseService(const string &service,bool (*srv_func)(Mreq &,Mres &))
+//创建服务的client
+ros::ServiceClient serviceClient(const string &service,bool persistent = false)
+//查询某个参数的值
+bool getParam(const string &key,void &val);
+//给参数赋值
+bool setParam(const string &key,void val);
+```
+
 ### 开始编写C++Topic
 1. 创建一个pkg (topic_roscpp_test)
 ```bash
