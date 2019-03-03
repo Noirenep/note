@@ -157,6 +157,9 @@ x3 = copy.deepcopy(x) #深
 1
 ```
 ### 字符串
+
+字符串用法见才叫教程网站：[菜鸟教程--字符串](http://www.runoob.com/python3/python3-string.html)
+
 字符串存储Unicode文本
 ```python
 >>> s = "汉字"
