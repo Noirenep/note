@@ -26,9 +26,9 @@
 `
 
 ## 2.测试ROS
-输入代码 roscore
-rosrun	turtlesim turtlesim_node  
-rosrun	turtlesim turtle_teleop_key  
+输入代码 roscore  
+rosrun	turtlesim turtlesim_node    
+rosrun	turtlesim turtle_teleop_key    
 
 ## 3.ROS工程文件系统结构
 #### catkin workspace
