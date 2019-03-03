@@ -1,0 +1,158 @@
+获得版本库
+git init
+git clone
+
+git rm(mv重命名) test.txt
+= rm + test.txt + git add test.txt
+恢复:
+git reset HEAD test.txt 讲删除的文件从暂存区恢复到工作区
+git checkout -- test.txt 将工作区中的修改丢弃掉
+
+git config --global user.name ''
+git config --global user.email ''
+
+修复消息
+git commit -m '提交消息'
+git commit --amend -m '修正消息'
+
+git log
+-p 展开每次提交内容差异
+-n 金查看n次更新 -3
+- -stat仅显示简要的增改行数统计
+- -pretty=oneline
+--graph
+查看操作日志
+git reflog
+
+.gitignore
+*.a #忽略所有.a文件
+!lib.a #lib.a除外
+build/ #忽略build/目录下所有文件
+
+分支
+git branch 分支名 创建分支
+git checkout -b 分支名 创建分支 并且切换到新分支
+git checkout newbranch 切换分支
+git branch -d newbranch 删除分支
+分支改名
+git branch -m master master2
+
+分支合并
+git merge newbranch 把newbranch分支的修改合并到当前分支上
+禁用fast-forward
+git merge --no-ff dev
+
+版本回退
+git reset --hard HEAD^
+git reset --hard HEAD~1
+git reset --hard commit_id
+
+checkout
+git check -- test.txt 修改工作区 丢弃掉相对暂存区的内容
+git reset HEAD test.txt 暂存区的内容移除到工作区
+
+git diff 比较暂存区和工作区
+git diff HEAD 比较最新提交和工作区
+git diff -cached 比较尊新提交和暂存区的区别
+
+ 
+
+ 版本管理
+ git add
+ git commit
+ git rm
+
+ 保存工作现场
+ git stash
+ git stash list
+ 恢复现场
+ git stash apply (stash内容不删除 git stash drop stash@{0}手动删除)
+ git stath pop
+
+  
+
+  11.远程与Github
+  push 推送
+  pull 拉取并且合并
+  pull == fetch + merge
+
+  git remote add origin http://
+  origin 代表远程仓库
+
+  git push -u origin master 做一次关联
+
+  git remote show 显示所有关联的远程仓库
+  git remote show origin 列出远程仓库的详细信息
+
+  使用ssh
+  git remote add origin git@github.com:xuehu96/testGithub.git
+  git remote show origin
+  yes 发现不行
+
+  生成ssh密钥
+  ssh-keygen 回车X3
+  cd
+  cd .ssh
+  到github上 setting Deploy keys 上传公钥 √ Allow write access
+  git remote show origin 可以看到Fetch URL 和 Push URL
+  git push -u origin master//做一次关联
+
+  13.git远程协作
+  pull = git fetch + git merge
+  git fetch
+  git branch -av
+  git merge origin/master
+
+  别名
+  git config --gloubal alias.br branch
+  st status
+  co checkout
+
+   
+
+   推送分支
+   git checkout -b develop
+   git push --set-upstream origin develop[:develop2]
+   [分支不同名的时候会出错git push]
+   [git push origin HEAD:develop2推送本地分支到远程不同名分支]
+
+   git push -u origin test
+
+   拉取远程的分支到本地并新建
+   git pull
+   git checkout -b test origin/test
+   git checkout --track origin/test
+
+   删除远程分支
+   git push的完整写法
+   git push origin src:dest
+   git push origin :develop删除develop
+   git push origin --delete develop
+
+   重命名远程分支
+   删掉远程分支 本地改名 推送
+
+   创建标签
+   git tag v1.0.1
+   创建一个带注释的标签
+   git tag -a v1.0.2 -m 'release version'
+   删除标签
+   git tag -d tag_name
+
+   远程标签
+   git tag -l '?2*' V2.X
+   打标签git tag -a V3.0 -m 'V3.0'
+   git push origin V3.0
+   git push origin --tags//一次推送所有标签
+   获取标签
+   git pull
+   删除远程标签
+   git push origin :ref/tags/V6.0
+
+   远程删除后 同步删除本地分支
+   git remote show origin
+   git remote prune origin
+
+   查看远程分支的log
+   git log origin/master
+   git log refs/remote/origin/master
