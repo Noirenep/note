@@ -170,6 +170,23 @@ x3 = copy.deepcopy(x) #深
 >>> chr(0x6c49)
 '汉'
 ```
+### 输入(input)
+>在 Python3.x 中 raw_input() 和 input() 进行了整合，去除了 raw_input( )，仅保留了input( )函数，其接收任意任性输入，将所有输入默认为字符串处理，并返回字符串类型。  
+
+Python3.x 中 input() 函数接受一个标准输入数据，返回为 string 类型。
+```python
+>>> a = input()
+123
+>>> a
+'123'
+#如果需要整数123 则需要转换
+>>> a = int(a)
+>>> a
+123
+```
+
+
+
 ### 元组（tuple）
 >注：元组只能读 不能修改
 ```python 
