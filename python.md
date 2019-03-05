@@ -434,21 +434,153 @@ print(test(0))  #0
 ```
 ---
 ## 5.迭代器
-`//TODO 2019年3月4日11:22:09`
+```python
+#手工迭代
+>>> d = [0,1,2]
+>>> x = d.__iter__()
+>>> x.__next__()
+0
+>>> x.__next__()
+1
+>>> x.__next__()
+2
+>>> x.__next__()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+StopIteration
+
+#自动迭代
+for i in [0,1,2]:
+    print(i)#输出 0 1 2
+```
 
 ---
 ## 6.模块
-
+```python
+import sys  
+from xxx import xxx,xxx  
+import xxx as xxx #重命名 
+```
 
 ---
 ## 7.类
+```python
+class A:
+    a = 100
 
+    def __init__(self,x):
+        self.x = x;  #self相当于其他语言的this
 
+    def get_x(self):
+        return self.x
+
+class B(A):
+    b = "hello"
+    def __init__(self,x,y):
+        super().__init__(x)
+        self.y=y
+
+    def get_y(self):
+        return self.y
+
+o = B(1,2)
+
+print(o.get_x(),o.get_y())## 1 2
+```
+>私有字段(Attribute)用双下划线开头__name
+
+### 继承
+```python
+class A     :pass
+class B(A)  :pass
+class C(B)  :pass
+
+issubclass(A,object) #true
+type(A) is A.__class__ #true
+
+B.__base__ #A
+A.__subclasses__() #[B]
+```
+
+### 初始化
+`__init__是可选的`  
+
+### 覆盖(override)
+```python
+class A:
+    def m(self):print("A.m")
+    def do(self):self.m()
+
+class B(A):
+    def m(self):print("B.m")
+
+A().do()  #输出 A.m
+B().do()  #输出 B.m
+```
+
+### 类的专有方法
+- __init__ : 构造函数，在生成对象时调用
+- __del__ : 析构函数，释放对象时使用
+- __repr__ : 打印，转换
+- __setitem__ : 按照索引赋值
+- __getitem__: 按照索引获取值
+- __len__: 获得长度
+- __cmp__: 比较运算
+- __call__: 函数调用
+- __add__: 加运算
+- __sub__: 减运算
+- __mul__: 乘运算
+- __truediv__: 除运算
+- __mod__: 求余运算
+- __pow__: 乘方
+ 
 ---
 ## 8.异常
+
+```python
+import sys
+def test():
+    try:
+        raise Exception("err")
+    except:
+        print(sys.exc_info())
+        
+test()
+#(<class 'Exception'>, Exception('err'), <traceback object at 0x0000026EB3FB70C8>)
+```
+异常处理
+- try 需要保护的代码块
+- except 异常发生时 按所属类型捕获
+- else 未发生异常执行  前面需要至少有1个except
+- finally 无论是否发生异常 总是执行
+```python
+def test(n):
+    try:
+        print("try")
+        if not n:
+            raise Exception()
+    except:
+        print("except")
+    else:
+        print("else")
+    finally:
+        print("finally")
+
+test(0)
+#try
+#except
+#finally
+test(1)
+#try
+#else
+#finally
+```
 ---  
-## **end**
-> 后面的内容不看了
+## **END**
+### 参考资料
+- python3学习笔记 图书馆TP311.561 143：1 
+- [网页: 菜鸟教程 -- 学习python3](http://www.runoob.com/python3/python3-tutorial.html)
 
 
+###### ( writing for 汤圆  )
 
