@@ -156,3 +156,11 @@ git diff -cached 比较尊新提交和暂存区的区别
    查看远程分支的log
    git log origin/master
    git log refs/remote/origin/master
+
+
+echo "# roscpp" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/xuehu96/roscpp.git
+git push -u origin master

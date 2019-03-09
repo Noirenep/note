@@ -174,21 +174,107 @@ bool setParam(const string &key,void val);
 ```
 
 ### 开始编写C++Topic
-1. 创建一个pkg (topic_roscpp_test)
+1. 创建一个pkg (test_topic_roscpp)
 ```bash
-catkin_create_pkg topic_roscpp_test roscpp std_msgs message_generation
+catkin_create_pkg test_topic_roscpp roscpp std_msgs message_generation
 ```
-2. mkdir msg && cd msg创建一个msg(ifs.msg)
-				int32 cnt
-				float32 value
-				string status
+2. mkdir msg && cd msg创建一个msg(mymsg.msg)
+```c++
+int32 id
+float32 value
+string str
+``` 
+
+接下来修改CMakeList文件，把mymsg.msg添加进去 
+ ```cmake
+ 49 ## Generate messages in the 'msg' folder
+ 50  add_message_files(                                                        
+ 51    FILES
+ 52    mymsg.msg
+ 53 #   Message2.msg
+ 54  )
+
+ 70 ## Generate added messages and services with any dependencies listed here
+ 71  generate_messages(                                                        
+ 72    DEPENDENCIES
+ 73    std_msgs
+ 74  )
+ ```
+
+```xml
+去掉下面2行的注释
+ <!--   <build_depend>message_generation</build_depend> --> 
+ <!--   <exec_depend>message_runtime</exec_depend> -->  
+```
+最后：  
+  `catkin_make`   编译一下 生成.h文件
+
+
 3. 编写recv代码
-		首先 ros::init()
-		接下来 拿到handle
+- 到src目录下 创建 `recv.cpp`  
+```cpp
+#include <ros/ros.h>
+#include <test_topic_roscpp/mymsg.h>
+
+void callbackfun(const test_topic_roscpp::mymsg::ConstPtr &msg)
+{
+	ROS_INFO("Recv id:%d,value:%f,str:%s",msg->id,msg->value,msg->str.c_str());
+}
+
+int main(int argc,char **argv)
+{
+	ros::init(argc,argv,"recv");
+
+	ros::NodeHandle handle;
+
+	//subscribe第一个参数：订阅的话题
+	//第二个参数 
+	ros::Subscriber receiver = handle.subscribe("tangyuan",1,callbackfun);
+
+	//进入等待 不返回 类似于while(1);
+	ros::spin();
+
+	return 0;
+}
+```
+
 
 4. 编写send代码
+- 到src目录下 创建 `send.cpp`  
+```cpp
+#include <ros/ros.h>
+#include <test_topic_roscpp/mymsg.h>
+
+int main(int argc, char** argv)
+{
+	ros::init(argc,argv,"send");
+	
+	ros::NodeHandle handle;
+	
+	ros::Publisher sender = handle.advertise<test_topic_roscpp::mymsg>("tangyuan",1);
+
+	ros::Rate loop_rate(1.0);//频率为1Hz
+
+	test_topic_roscpp::mymsg msg;
+	msg.id=1;
+	msg.value=1.0;
+	msg.str="tangyuan";
+	while(ros::ok())
+	{
+		msg.id++;
+		msg.value *=1.66;
+		sender.publish(msg);//发送
+		ROS_INFO("send msg: cnt = %d , value = %f",msg.id,msg.value);
+		//休眠
+		loop_rate.sleep();
+	}
+	return 0;
+}
+```
 
 5. 修改CMakelist
+Ctrl+G Ctrl+A
+添加下面内容
 ```cmake
 add_executable(send src/send.cpp)
 target_link_libraries(send ${catkin_LIBRARIES})
@@ -198,6 +284,16 @@ add_executable(recv src/recv.cpp)
 target_link_libraries(recv ${catkin_LIBRARIES})
 add_dependencies(recv beginner_tutorials_generate_messages_cpp)
 ```
+然后 `catkin_make`  
+
+6. 运行
+source setup.sh文件
+```bash
+roscore
+rosrun test_topic_roscpp recv
+rosrun test_topic_roscpp send
+```
+> 至此，ROSCPP的Topic通信完成
 
 
 ## 8.ROS ServiceDemo（C++）
