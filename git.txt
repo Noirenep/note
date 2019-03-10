@@ -85,6 +85,7 @@ git diff -cached 比较尊新提交和暂存区的区别
   git remote show origin 列出远程仓库的详细信息
 
   使用ssh
+  git remote set-url origin .ssh
   git remote add origin git@github.com:xuehu96/testGithub.git
   git remote show origin
   yes 发现不行
