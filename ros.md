@@ -412,8 +412,91 @@ rosrun test_service_roscpp client
 ## 9.ROS TopicDemo（Python）
 
 
-> 待编辑
+### rospy
+- Node  
+```python
+无返回 init_node(name) #注册和初始化node
+MasterProxy get_master()#获取master的句柄
+bool is_shutdown() #是否关闭
+on_shutdown(fn) #在node关闭时调用
+str get_node_uri()#返回节点uri
+str get_name()#返回节点全名
+str get_namespace()#返回本节点名字空间
+```
+- Topic  
+```py
+[[str,str]] get published_topics()#返回正在被发布的所有topic的名称和类型
+Message wait_for_message(topic,topic_type,time_out=None)#只等待一个！等待指定topic的一个message
+spin() #阻塞
 
+publisher类:
+__init__(self,name,data_class,queue_size=None)
+publish(self,msg)#成员函数 发布消息
+unregister(self)停止发布
+
+Subscriber类：
+__init__(self,name,data_class,call_back=None,queue_size=None)#构造函数
+unregister(self)#停止订阅
+```
+- Service  API
+```py
+函数：
+wait_for_service(service,timeout=None)#阻塞至服务可用
+#没有返回值
+
+service类：#server
+__init__(self,name,service_class,handler)
+"""
+def handler(req)#传入请求
+	...
+	...
+	return res#返回结果
+"""
+shutdown(self)#关闭服务
+
+ServiceProxy类：#client
+__init(self,name,service_class)
+Response call(self,*args,**kwds)#client.call(req)
+Response __call__(self,*args,**kwds)#resp=client(req)
+close()
+```
+
+- Param  都是函数
+```py
+XmlRpcLegalValue get_param(param_name,default=_unspecified) #获取参数的值
+[str] get_param_names() #获取参数的名称
+set_param(param_name,param_value) 设#置参数的值
+delete_param(param_name) #删除参数
+bool has_param(param_name) #参数是否存在于参数服务器上
+str search_param() #搜索参数
+```
+- Time  时刻  Duration 一段时间
+```py
+init(self,	secs=0,	nsecs=0) #构造函数
+Time now() #静态方法	返回当前时刻的Time对象
+rospy.Time.now()
+Time get_rostime()#=上面的
+float get_time #返回当前时间 float 单位秒
+sleep(duration)#挂起
+```
+
+Rate类
+rate = rospy.Rate(5)
+rate.sleep()
+
+### Topic实例
+1. package(test_topic_rospy)
+
+
+2. msg
+
+3. talker.py 
+
+4. listener.py  
+
+5. Cmakelist&package.xml  
+
+  
 
 ## 10.ROS ServiceDemo（Python）
 
