@@ -297,8 +297,117 @@ rosrun test_topic_roscpp send
 
 
 ## 8.ROS ServiceDemo（C++）
+1. 创建一个pkg (test_service_roscpp)
+```bash
+catkin_create_pkg test_service_roscpp roscpp std_msgs message_generation
+```
+2. mkdir srv && cd srv(vi mysrv.srv)
+```c++
+string name
+int32 age
+---
+string feedback
 
-> 待编辑
+``` 
+
+接下来修改CMakeList文件，把mysrv.srv添加进去 
+ ```cmake
+ 56 ## Generate services in the 'srv' folder
+ 57  add_service_files(
+ 58    FILES
+ 59    mysrv.srv                                                                
+ 60 #   Service2.srv
+ 61  )
+
+70 ## Generate added messages and services with any dependencies listed here
+ 71  generate_messages(                                                        
+ 72    DEPENDENCIES
+ 73    std_msgs
+ 74  )
+ ```
+
+```xml
+去掉下面2行的注释
+ <!--   <build_depend>message_generation</build_depend> --> 
+ <!--   <exec_depend>message_runtime</exec_depend> -->  
+```
+最后：  
+  `catkin_make`   编译一下 生成.h文件
+
+
+### Server
+```cpp
+#include <ros/ros.h>
+#include <test_service_roscpp/mysrv.h>
+
+bool handle_function(test_service_roscpp::mysrv::Request &req, test_service_roscpp::mysrv::Response &res)
+{
+ ROS_INFO("Request from %s with age %d", req.name.c_str(), req.age);
+ //处理请求,结果写入response
+ res.feedback = "Hi " + req.name + ". I'm server!";
+ //返回true,正确处理了请求
+ return true;
+}
+
+int main(int argc, char** argv)
+{
+ ros::init(argc, argv, "server");  //解析参数,命名节点server
+ ros::NodeHandle handle;        //创建句柄,实例化node
+ ros::ServiceServer service = handle.advertiseService("tangyuaner", handle_function);  
+ //写明服务的处理函数
+ ros::spin();
+ return 0;
+}
+```
+
+### Client
+```cpp
+# include "ros/ros.h"
+# include "test_service_roscpp/mysrv.h"
+int main(int argc, char **argv)
+{
+    ros::init(argc, argv, "client");// 初始化,节点命名为"client"
+    ros::NodeHandle handle;
+    ros::ServiceClient client = handle.serviceClient<test_service_roscpp::mysrv>("tangyuaner");
+    // 定义service客户端,service名字为"mysrv",service类型为test_service_roscpp
+    // 实例化srv,设置其request消息的内容,这里request包含两个变量,name和age,见Greeting.srv
+    test_service_roscpp::mysrv srv;
+    srv.request.name = "tangyuan";
+    srv.request.age = 20;
+    if (client.call(srv))
+    {
+        // 注意我们的response部分中的内容只包含一个变量response,另,注意将其转变成字符串
+        ROS_INFO("Response from server: %s", srv.response.feedback.c_str());
+    }
+    else
+    {
+        ROS_ERROR("Failed to call service Service_demo");
+        return 1;
+    }
+    return 0;
+}
+```
+
+### 修改CMakelist
+Ctrl+G Ctrl+A
+添加下面内容
+```cmake
+add_executable(server src/server.cpp)
+target_link_libraries(server ${catkin_LIBRARIES})
+
+add_executable(client src/client.cpp)
+target_link_libraries(client ${catkin_LIBRARIES})
+```
+然后 `catkin_make`  
+
+### 运行
+source setup.sh文件
+```bash
+roscore
+rosrun test_service_roscpp server
+rosrun test_service_roscpp client
+```
+
 
 ## 9.ROS TopicDemo（Python）
 
