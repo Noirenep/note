@@ -1,5 +1,5 @@
 # ROS笔记
-> 编辑时间：2019年03月02日22:58:07
+> 编辑时间：2019年3月11日20:13:18
 
 ## 1.安装
 
@@ -39,7 +39,8 @@ src CMakeLists.txt
     /package1 #src下面有若干package
     /package2
         CMakeList.txt #源文件 依赖项 编译规则 目标文件
-        package.xml #属性信息 包名 作者 依赖项（编译和运行的依赖项build_depend run_depend） 版本
+        package.xml 
+        #属性信息 包名 作者 依赖项（build_depend run_depend） 版本
         /action #动作
             *.action
         /config
@@ -72,6 +73,9 @@ src CMakeLists.txt
 
 ## 5.创建工作空间和包
 #### 创建一个工作空间
+
+注意:需要创建src文件夹
+
 ```
 mkdir -p catkin_ws/src
 cd catkin_ws
@@ -584,6 +588,9 @@ if __name__ == '__main__':
 5. Cmakelist&package.xml  
 
 ### 运行方法
+
+> python文件不需要编译 但是必须加执行权限 否则提示无法执行  
+chmod +x pysend.py pyrecv.py
 
 启动发布者   
 ```
