@@ -642,18 +642,73 @@ string feedback
 3. pyserver.py 
 
 ```python
+#!/usr/bin/env python
+# coding:utf-8
 
+# service模块的加载方式，from 包名.srv import *
+import rospy
+from test_service_rospy.srv import *
+
+def server_srv():
+    # 初始化节点，命名为 "pyserver"
+    rospy.init_node("pyserver")
+    # 定义service的server端，service名称为"tangyuaner"， service类型为mysrv
+    # 收到的request请求信息将作为参数传递给handle_function进行处理
+    s = rospy.Service("tangyuaner", mysrv, handle_function)
+    rospy.loginfo("Ready to handle the request:")
+    # 阻塞程序结束
+    rospy.spin()
+
+# Define the handle function to handle the request inputs
+def handle_function(req):
+    # 注意我们是如何调用request请求内容的，与前面client端相似，都是将其认为是一个对象的属性，通过对象调用属性，在我们定义
+    # 的test_service_rospy类型的service中，request部分的内容包含两个变量，一个是字符串类型的name，另外一个是整数类型的age
+    rospy.loginfo( 'Request from %s with age %d', req.name, req.age)
+    # 返回一个Service_demoResponse实例化对象，其实就是返回一个response的对象，其包含的内容为我们再test_service_rospy.srv中定义的
+    # response部分的内容，我们定义了一个string类型的变量，因此，此处实例化时传入字符串即可
+    return mysrvResponse("Hi %s. I' server!"%req.name)
+
+# 如果单独运行此文件，则将上面定义的server_srv作为主函数运行
+if __name__=="__main__":
+    server_srv()
 ```
 
 4. pyclient.py  
 
 ```python
+#!/usr/bin/env python
+# coding:utf-8
+import rospy
+from test_service_rospy.srv import *
 
+def client_srv():
+    rospy.init_node('pyclient')
+    # 等待有可用的服务 "tangyuaner"
+    rospy.wait_for_service("tangyuaner")
+    try:
+        # 定义service客户端，service名称为“tangyuaner”，service类型为mysrv
+        client = rospy.ServiceProxy("tangyuaner",mysrv)
+
+        # 向server端发送请求
+        # 注意，此处发送的request内容与service文件中定义的request部分的属性是一致的
+        resp = client.call("tangyuan",20)
+
+        # 打印处理结果，注意调用response的方法，类似于从resp对象中调取response属性
+        rospy.loginfo("Message From server:%s"%resp.feedback)
+    except rospy.ServiceException, e:
+        rospy.logwarn("Service call failed: %s"%e)
+
+# 如果单独运行此文件，则将上面函数client_srv()作为主函数运行
+if __name__=="__main__":
+    client_srv()
 ```
 
 5. Cmakelist&package.xml  
 
 ### 运行方法
+
+roscore   
+chmod +x py*
 
 启动发布者
 
