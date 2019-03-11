@@ -486,22 +486,186 @@ rate.sleep()
 
 ### Topic实例
 1. package(test_topic_rospy)
-
+```bash
+catkin_create_pkg test_topic_rospy rospy std_msgs message_generation
+```
 
 2. msg
+mkdir msg && cd msg创建一个msg(mymsg.msg)
+```c++
+int32 id
+float32 value
+string str
+``` 
 
-3. talker.py 
+接下来修改CMakeList文件，把mymsg.msg添加进去 
+ ```cmake
+ 49 ## Generate messages in the 'msg' folder
+ 50  add_message_files(                                                        
+ 51    FILES
+ 52    mymsg.msg
+ 53 #   Message2.msg
+ 54  )
 
-4. listener.py  
+ 70 ## Generate added messages and services with any dependencies listed here
+ 71  generate_messages(                                                        
+ 72    DEPENDENCIES
+ 73    std_msgs
+ 74  )
+ ```
+
+```xml
+去掉下面2行的注释
+ <!--   <build_depend>message_generation</build_depend> --> 
+ <!--   <exec_depend>message_runtime</exec_depend> -->  
+```  
+
+3. pysend.py   
+
+mkdir scripts && cd scripts
+
+```python
+#!/usr/bin/env python
+#coding=utf-8
+import rospy
+#倒入自定义的数据类型
+from test_topic_rospy.msg import mymsg
+
+def talker():
+    #Publisher 函数第一个参数是话题名称，第二个参数 数据类型，现在就是我们定义的msg 最后一个是缓冲区的大小
+    #queue_size: None（不建议）  #这将设置为阻塞式同步收发模式！
+    #queue_size: 0（不建议）#这将设置为无限缓冲区模式，很危险！
+    #queue_size: 10 or more  #一般情况下，设为10 。queue_size太大了会导致数据延迟不同步。
+    pub = rospy.Publisher('tangyuan', mymsg , queue_size=10)
+    rospy.init_node('pysend', anonymous=True)
+    #更新频率是1hz
+    rate = rospy.Rate(1) 
+    id=0
+    value=1.0
+    str='tangyuan'
+    while not rospy.is_shutdown():
+        #计算距离
+        rospy.loginfo('send msg:id=%d ,value=%f',id,value)
+        pub.publish(mymsg(id,value,str))
+        value*=1.02
+        id=id+1
+        rate.sleep()
+
+if __name__ == '__main__':
+    talker()
+ 
+```
+
+4. pyrecv.py  
+
+```python
+#!/usr/bin/env python
+#coding=utf-8
+import rospy
+
+#导入mgs到pkg中
+from test_topic_rospy.msg import mymsg
+
+#回调函数输入的应该是msg
+def callback(mymsg):
+    rospy.loginfo('receive from %s: id=%d, value=%f',mymsg.str,mymsg.id,mymsg.value)
+
+def listener():
+    rospy.init_node('pyrecv', anonymous=True)
+    #Subscriber函数第一个参数是topic的名称，第二个参数是接受的数据类型 第三个参数是回调函数的名称
+    rospy.Subscriber('tangyuan', mymsg, callback)
+    rospy.spin()
+
+if __name__ == '__main__':
+    listener()
+
+```
 
 5. Cmakelist&package.xml  
 
-  
+### 运行方法
+
+启动发布者   
+```
+$ roscore
+```
+```sh
+$ rosrun test_topic_rospy pysend.py   #Python
+``` 
+
+启动接收者
+
+```sh
+$ rosrun test_topic_rospy pyrecv.py   #Python
+``` 
 
 ## 10.ROS ServiceDemo（Python）
 
 
-> 待编辑
+1. package(test_service_rospy)
+```bash
+catkin_create_pkg test_service_rospy rospy std_msgs message_generation
+```
+
+2. srv
+mkdir srv && cd srv 创建一个srv(mysrv.srv)
+```c++
+string name
+int32 age
+---
+string feedback
+
+``` 
+
+接下来修改CMakeList文件，把mysrv.srv添加进去 
+ ```cmake
+ 56 ## Generate services in the 'srv' folder
+ 57  add_service_files(
+ 58    FILES
+ 59    mysrv.srv                                                                
+ 60 #   Service2.srv
+ 61  )
+
+70 ## Generate added messages and services with any dependencies listed here
+ 71  generate_messages(                                                        
+ 72    DEPENDENCIES
+ 73    std_msgs
+ 74  )
+ ```
+
+```xml
+去掉下面2行的注释
+ <!--   <build_depend>message_generation</build_depend> --> 
+ <!--   <exec_depend>message_runtime</exec_depend> -->  
+```
+
+3. pyserver.py 
+
+```python
+
+```
+
+4. pyclient.py  
+
+```python
+
+```
+
+5. Cmakelist&package.xml  
+
+### 运行方法
+
+启动发布者
+
+```sh
+$ rosrun test_service_rospy pyserver.py   #Python
+``` 
+
+启动接收者
+
+```sh
+$ rosrun test_service_rospy pyclient.py   #Python
+``` 
 
 
 
