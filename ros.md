@@ -277,7 +277,7 @@ int main(int argc, char** argv)
 ```
 
 5. 修改CMakelist
-Ctrl+G Ctrl+A
+Shift+h Shift+a
 添加下面内容
 ```cmake
 add_executable(send src/send.cpp)
@@ -393,7 +393,7 @@ int main(int argc, char **argv)
 ```
 
 ### 修改CMakelist
-Ctrl+G Ctrl+A
+Shift+h Shift+a
 添加下面内容
 ```cmake
 add_executable(server src/server.cpp)
@@ -717,13 +717,13 @@ if __name__=="__main__":
 roscore   
 chmod +x py*
 
-启动发布者
+启动服务器
 
 ```sh
 $ rosrun test_service_rospy pyserver.py   #Python
 ``` 
 
-启动接收者
+启动客户端
 
 ```sh
 $ rosrun test_service_rospy pyclient.py   #Python
