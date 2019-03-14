@@ -277,7 +277,7 @@ int main(int argc, char** argv)
 ```
 
 5. 修改CMakelist
-Shift+h Shift+a
+Shift+h Shift+a  
 添加下面内容
 ```cmake
 add_executable(send src/send.cpp)
@@ -393,7 +393,7 @@ int main(int argc, char **argv)
 ```
 
 ### 修改CMakelist
-Shift+h Shift+a
+Shift+h Shift+a  
 添加下面内容
 ```cmake
 add_executable(server src/server.cpp)
