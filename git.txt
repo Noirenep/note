@@ -165,3 +165,10 @@ git add README.md
 git commit -m "first commit"
 git remote add origin https://github.com/xuehu96/roscpp.git
 git push -u origin master
+
+已有仓库
+git remote add origin git@gitee.com:xuehu96/tcp_hello_client.c.git
+git push -u origin master
+
+拉取远程无关仓库
+git pull --allow-unrelated-histories
