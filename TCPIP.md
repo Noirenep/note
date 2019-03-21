@@ -232,5 +232,39 @@ addr.sin_port=htons(atoi(serv_port));
 
 ## TCP服务器与客户端
 
-//TODO
+TCP服务端在accept后返回客户端的socket  
+客户端在connect后分配随机的端口  
 
+> TODO echo的例子
+
+## UDP的服务端与客户端
+>UDP的客户端和服务器均只需要一个套接字   
+
+基于UDP的数据IO函数
+```c
+#include <sys/socket.h>
+
+ssize_t sendto(
+    int sock, //用于传输数据的UDP套接字描述符
+    void *buff, //待传输数据的地址
+    size_t nbytes,//待传输数据的长度 字节为单位
+    int flags,//可选参数 没有传递0
+    struct sockaddr *to,//目标地址 sockaddr结构体 的地址
+    socklen_t addrlen//结构体变量长度
+);
+//成功返回传输的字节数 失败返回-1
+
+ssize_t recvfrom(
+    int socket, //用于接收数据的UDP套接字描述符
+    void *buff, //保存接收数据缓冲的地址
+    size_t nbytes, //可接收的最大字节数
+    int flags,  //可选参数 没有传入0
+    struct sockaddr *from, //存有发送端地址的的sockaddr的地址
+    socklen_t *addrlen // 保存参数from结构体变量长度的地址
+);
+//成功返回接收的字节数 失败返回-1
+```
+
+>TODO udp echo的例子
+
+### UDP数据报存在边界
