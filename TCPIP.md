@@ -1,6 +1,18 @@
 # TCP/IP 网络编程
 
 ## 网络编程和套接字
+### TCP/IP协议族
+- 应用层 HTTP FTP DNS NFS
+- 传输层 TCP UDP
+- 网络层 IP ARP RARP ICMP
+- 链路层 Ethernet
+
+### UDP
+>格式：8B UDP报头，0~65527B 数据  
+头部格式：源端口，目标端口，长度，校验和（各2B）
+### TCP
+>格式：头部（20~60B），数据（0~35535B）  
+>头部格式：源端口，目标端口，序号，确认号，等等。。。。
 
 ### TCPserver流程
 1. socket()
@@ -268,3 +280,23 @@ ssize_t recvfrom(
 >TODO udp echo的例子
 
 ### UDP数据报存在边界
+
+
+
+
+
+
+
+
+
+
+## Python 取本机MAC地址
+
+```py
+import uuid
+node = uuid.uuid1()
+print('node=',node)
+hex=node.hex
+mac_addr=hex[-12:]
+print('mac_addr=',mac_addr)
+```
