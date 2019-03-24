@@ -457,10 +457,13 @@ for i in [0,1,2]:
 ---
 ## 6.模块
 ```python
-import sys  
-from xxx import xxx,xxx  
+import sys  #引入所有函数
+from xxx import * #引入模块中所有函数
+from xxx import xxx,xxx  #引入xxx函数 没列入的不引入
 import xxx as xxx #重命名 
-```
+``` 
+>使用from example.module01 import * 调用函数不需要加包名  如`myfun1(10,20)`
+使用from example import module01 调用函数需要加模块名和函数名，不需要加包名 如`module01.myfun1(10,20)`
 
 ---
 ## 7.类
@@ -576,11 +579,61 @@ test(1)
 #finally
 ```
 ---  
+## 文件
+### 读写文本文件
+```py
+# fileRW.py
+
+# 将一个列表中的字符串写入文件
+f = open('test1.txt','w')
+for x in ['aaa',123,'汤圆',True,'tangyuan']:
+    if type(x) == str:
+        f.write(x)
+f.close()
+
+#一次性读出到字符串
+f = open('test1.txt','r')
+xx = f.read()
+print('xx=',xx)
+f.close() 
+
+#输出结果：xx= aaa汤圆tangyuan
+```
+
+---
 ## **END**
 ### 参考资料
 - python3学习笔记 图书馆TP311.561 143：1 
 - [网页: 菜鸟教程 -- 学习python3](http://www.runoob.com/python3/python3-tutorial.html)
 
-
+## 一些零碎代码
+### UART py
+```py
+# -*- coding: utf-8 -*
+import serial
+import time
+# 打开串口
+ser = serial.Serial("/dev/ttyUSB0", 115200)
+def main():
+    while True:
+        # 获得接收缓冲区字符
+        count = ser.inWaiting()
+        if count != 0:
+            # 读取内容并回显
+            recv = ser.read(count)
+            print(recv)
+            #ser.write(recv)
+        # 清空接收缓冲区
+        ser.flushInput()
+        # 必要的软件延时
+        time.sleep(0.2)
+    
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        if ser != None:
+            ser.close()
+```
 
 ###### ( writing for 汤圆  )
