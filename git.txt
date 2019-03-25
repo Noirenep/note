@@ -21,9 +21,9 @@ git push origin master
 git push mirror master
 
 更换http为ssh
+git remote set-url origin git@gitee.com:xuehu96/note.git
 
 一条命令更新两个远程仓库
-git remote set-url origin git@gitee.com:xuehu96/note.git
 git remote set-url --add origin git@gitee.com:xuehu96/note.git
 
 
