@@ -20,7 +20,10 @@ git pull mirror master
 git push origin master 
 git push mirror master
 
+更换http为ssh
+
 一条命令更新两个远程仓库
+git remote set-url origin git@gitee.com:xuehu96/note.git
 git remote set-url --add origin git@gitee.com:xuehu96/note.git
 
 
@@ -117,8 +120,8 @@ git diff -cached 比较尊新提交和暂存区的区别
   git remote show origin 列出远程仓库的详细信息
 
 使用ssh
-  git remote set-url origin .ssh
-  git remote add origin git@github.com:xuehu96/testGithub.git
+  git remote set-url origin git@gitee.com:xuehu96/note.git
+  git remote add origin git@github.com:xuehu96/note.git
   git remote show origin
   yes 发现不行
 
