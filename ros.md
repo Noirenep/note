@@ -7,7 +7,8 @@
 > 根据官网的安装步骤，添加仓库，添加key，更新
 
 镜像选择清华的  
-`sudo sh -c '. /etc/lsb-release && echo "deb http://mirrors.tuna.tsinghua.edu.cn/ros/ubuntu/ $DISTRIB_CODENAME main" > /etc/apt/sources.list.d/ros-latest.list'
+`
+sudo sh -c '. /etc/lsb-release && echo "deb http://mirrors.tuna.tsinghua.edu.cn/ros/ubuntu/ $DISTRIB_CODENAME main" > /etc/apt/sources.list.d/ros-latest.list'
 `
 > sudo apt-get install ros-kinetic-desktop-full
 
@@ -16,13 +17,15 @@
 `sudo	rosdep	init	&&	rosdep	update`
 
 ### 环境配置
-`echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
+`
+echo "source /opt/ros/kinetic/setup.zsh" >> ~/.zshrc
 `   
 然后执行  
 `source ~/.bashrc
 `
 ### 安装其他一些需要的包
-`sudo apt install python-rosinstall python-rosinstall-generator python-wstool build-essential
+`
+sudo apt install python-rosinstall python-rosinstall-generator python-wstool build-essential
 `
 
 ## 2.测试ROS
