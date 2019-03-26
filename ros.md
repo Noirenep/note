@@ -535,7 +535,7 @@ mkdir scripts && cd scripts
 #!/usr/bin/env python
 #coding=utf-8
 import rospy
-#倒入自定义的数据类型
+#导入自定义的数据类型
 from test_topic_rospy.msg import mymsg
 
 def talker():
@@ -551,7 +551,6 @@ def talker():
     value=1.0
     str='tangyuan'
     while not rospy.is_shutdown():
-        #计算距离
         rospy.loginfo('send msg:id=%d ,value=%f',id,value)
         pub.publish(mymsg(id,value,str))
         value*=1.02
