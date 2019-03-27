@@ -610,10 +610,9 @@ socket函数创建
 - protocol: 一般不填默认为0.  
 
 例如:
-`socket.socket( 
-            socket.AF_INET, socket.SOCK_STREAM)`
+`socket.socket(socket.AF_INET, socket.SOCK_STREAM)`
 
-### server
+### server TCP
 ```py
 #!/usr/bin/python3
 # 文件名：server.py
@@ -636,7 +635,7 @@ while True:
     clientsocket.close()
 ```
 
-### client
+### client TCP
 ```py
 #!/usr/bin/python3
 # 文件名：client.py
@@ -653,6 +652,49 @@ msg = s.recv(1024) # 接收小于 1024 字节的数据
 s.close()
 
 print (msg.decode('utf-8'))
+```
+
+### UDP server
+```py
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+import socket
+ 
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.bind(("127.0.0.1", 6000))
+print("UDP bound on port 6000...")
+ 
+while True:
+    data, addr = s.recvfrom(1024)
+    print("Receive from %s:%s" % addr)
+    if data == b"exit":
+        s.sendto(b"Good bye!\n", addr)
+        continue
+    s.sendto(b"Hello %s!\n" % data, addr)
+```
+
+### UDP client
+```py
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+import socket
+ 
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+addr = ("127.0.0.1", 6000)
+ 
+while True:
+    data = input("Please input your name: ")
+    if not data:
+        continue
+    s.sendto(data.encode(), addr)
+    response, addr = s.recvfrom(1024)
+    print(response.decode())
+    if data == "exit":
+        print("Session is over from the server %s:%s\n" % addr)
+        break
+ 
+s.close()
 ```
 
 
