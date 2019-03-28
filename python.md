@@ -667,6 +667,7 @@ print("UDP bound on port 6000...")
 while True:
     data, addr = s.recvfrom(1024)
     print("Receive from %s:%s" % addr)
+    print(data)
     if data == b"exit":
         s.sendto(b"Good bye!\n", addr)
         continue
@@ -695,6 +696,93 @@ while True:
         break
  
 s.close()
+```
+---
+## SocketServer类
+
+```py
+class ForkingUDPServer(ForkingMixIn, UDPServer)
+class ForkingTCPServer(ForkingMixIn, TCPServer)
+class ThreadingUDPServer(ThreadingMixIn, UDPServer)
+class ThreadingTCPServer(ThreadingMixIn, TCPServer)
+class ThreadingUnixStreamServer(ThreadingMixIn, UnixStreamServer)
+class ThreadingUnixDatagramServer(ThreadingMixIn, UnixDatagramServer)
+```
+
+
+### socketserver TCP Server
+```py
+import socketserver
+ 
+class MyTcpHandler(socketserver.BaseRequestHandler):
+    def handle(self):
+        while True:
+            try:
+                data=self.request.recv(1024)
+                if not data:break#此行代码针对linux系统
+                self.request.send(data.upper())
+            except ConnectionResetError:
+                break
+        self.request.close()
+ 
+if __name__ == '__main__':
+    server=socketserver.ThreadingTCPServer(('127.0.0.1',8080),MyTcpHandler)
+    server.serve_forever()
+
+``` 
+
+### socketserver TCP Client
+```py
+
+from socket import *
+import os
+ 
+client=socket(AF_INET,SOCK_STREAM)
+client.connect(('127.0.0.1',8080))
+ 
+while True:
+    msg='%s hello'%os.getpid()
+    client.send(msg.encode("utf-8"))
+    data=client.recv(1024)
+    print(data.decode('utf-8'))
+
+
+```
+
+### socketserver UDP Server
+```py
+
+import socketserver
+ 
+class MyUdpHandler(socketserver.BaseRequestHandler):
+    def handle(self):
+        res=self.request[0]
+        print('客户端发来的数据：',res)
+ 
+        self.request[1].sendto(res.upper(),self.client_address)
+ 
+ 
+if __name__ == '__main__':
+    server=socketserver.ThreadingUDPServer(('127.0.0.1',8080),MyUdpHandler)
+    server.serve_forever()
+
+```
+
+### socketserver UDP Client
+```py
+
+from socket import *
+import os
+ 
+client=socket(AF_INET,SOCK_DGRAM)
+ 
+while True:
+    msg='%s hello'%os.getpid()
+    client.sendto(msg.encode('utf-8'),('127.0.0.1',8080))
+    data,server_addr=client.recvfrom(1024)
+    print(data.decode('utf-8'))
+
+
 ```
 
 
