@@ -63,9 +63,16 @@ alt属性 图片无法加载显示的文字
 ## 第四章 表单
 
 ## 第五章 CSS
+>选择器和声明构成  
 
+`selector {declaration1;declaration2....declarationN}`
+- 选择器通常是需要改变的HTML元素
+- 每条声明由一个属性(property)和一个值(value)构成,属性和值用冒号隔开
+`selector{property:value}`
 
+## JavaScript
 
+## 备注
 ```html
 <head>
 
