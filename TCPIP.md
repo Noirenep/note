@@ -276,8 +276,139 @@ ssize_t recvfrom(
 );
 //成功返回接收的字节数 失败返回-1
 ```
+## UDP echo
+### server
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <string.h>
+#include <sys/socket.h>
 
->TODO udp echo的例子
+#define BUF_SIZE 30
+
+void error_handling(char *message);
+
+int main(int argc, char *argv[])
+{
+    int serv_sock;
+    char message[BUF_SIZE];
+    int str_len;
+    socklen_t clnt_adr_sz;
+
+    struct sockaddr_in serv_adr, clnt_adr;
+    if (argc != 2)
+    {
+        printf("Usage: %s <port>\n", argv[0]);
+        exit(1);
+    }
+
+    serv_sock = socket(PF_INET, SOCK_DGRAM, 0);
+    if (serv_sock == -1)
+    {
+        error_handling("UDP socket creating error");
+    }
+
+    memset(&serv_adr, 0, sizeof(serv_adr));
+    serv_adr.sin_family = AF_INET;
+    serv_adr.sin_addr.s_addr = htonl(INADDR_ANY);
+    serv_adr.sin_port = htons(atoi(argv[1]));
+
+    if (bind(serv_sock, (struct sockaddr *) &serv_adr, sizeof(serv_adr)) == -1)
+    {
+        error_handling("bind err");
+    }
+
+    while(1)
+    {
+        clnt_adr_sz = sizeof(clnt_adr);
+        str_len=recvfrom(serv_sock,message,BUF_SIZE,0,(struct sockaddr*)&clnt_adr,&clnt_adr_sz);
+        message[str_len]=0;
+        printf("Message from client: %s",message);
+        sendto(serv_sock,message,str_len,0,(struct sockaddr*)&clnt_adr,clnt_adr_sz);
+
+    }
+    close(serv_sock);
+
+    return 0;
+}
+
+void error_handling(char *message)
+{
+    fputs(message, stderr);
+    fputc('\n', stderr);
+    exit(1);
+}
+```
+
+### client
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <string.h>
+
+#define BUF_SIZE 30
+
+void error_handling(char *message);
+
+int main(int argc, char *argv[])
+{
+    int sock;
+    char message[BUF_SIZE];
+    int str_len;
+    socklen_t adr_sz;
+
+    struct sockaddr_in serv_adr, from_adr;
+    if (argc != 3)
+    {
+        printf("Usage: %s <IP> <port>\n", argv[0]);
+        exit(1);
+    }
+
+    sock = socket(PF_INET, SOCK_DGRAM, 0);
+    if (sock == -1)
+    {
+        error_handling("socket() error");
+    }
+
+    memset(&serv_adr, 0, sizeof(serv_adr));
+    serv_adr.sin_family = AF_INET;
+    serv_adr.sin_addr.s_addr = inet_addr(argv[1]);
+    serv_adr.sin_port = htons(atoi(argv[2]));
+
+
+    while(1)
+    {
+        fputs("Insert message(q to quit):",stdout);
+        fgets(message, sizeof(message), stdin);
+        if (!strcmp(message, "q\n"))
+        {
+            break;
+        }
+
+        sendto(sock,message,strlen(message),0,(struct sockaddr*)&serv_adr, sizeof(serv_adr));
+        adr_sz = sizeof(from_adr);
+        str_len = recvfrom(sock, message, BUF_SIZE, 0, (struct sockaddr*)&from_adr, &adr_sz);
+        message[str_len]=0;
+        printf("Message from server %s",message);
+    }
+    close(sock);
+
+    return 0;
+}
+
+void error_handling(char *message)
+{
+    fputs(message, stderr);
+    fputc('\n', stderr);
+    exit(1);
+}
+```
+
 
 ### UDP数据报存在边界
 
@@ -296,10 +427,3 @@ hex=node.hex
 mac_addr=hex[-12:]
 print('mac_addr=',mac_addr)
 ```
-
-## 多进程TCP
-
-## 多进程UDP
-
-
-## 多线程TCP and 多线程UDP
