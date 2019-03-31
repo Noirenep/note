@@ -144,6 +144,12 @@ void err_handling(char *message)
 ```
 
 > Windows实现
+## Windows下的项目配置
+- 导入头文件 winsock2.h
+- 链接ws2_32.lib库
+
+> 属性-> 链接器 -> 输入 ->附加依赖项 -> ws2_32.lib
+
 ### hello_server_win.c
 ```c
 //TODO
@@ -151,7 +157,65 @@ void err_handling(char *message)
 
 ### hello_client_win.c
 ```c
-//TODO
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <winsock2.h>
+
+#define BUF_SIZE 1024
+void ErrorHandling(const char *message);
+
+int main(int argc, char *argv[])
+{
+	WSADATA wsaData;
+	SOCKET hSocket;
+	char message[BUF_SIZE];
+	int strLen;
+	SOCKADDR_IN servAdr;
+
+	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
+		ErrorHandling("WSAStartup() error!");
+
+	hSocket = socket(PF_INET, SOCK_STREAM, 0);
+	if (hSocket == INVALID_SOCKET)
+		ErrorHandling("socket() error");
+
+	memset(&servAdr, 0, sizeof(servAdr));
+	servAdr.sin_family = AF_INET;
+	servAdr.sin_addr.s_addr = inet_addr("118.24.137.128");
+	servAdr.sin_port = htons(atoi("16666"));
+
+	if (connect(hSocket, (SOCKADDR*)&servAdr, sizeof(servAdr)) == SOCKET_ERROR)
+		ErrorHandling("connect() error!");
+	else
+		puts("Connected...........");
+
+	while (1)
+	{
+		fputs("Input message(Q to quit): ", stdout);
+		fgets(message, BUF_SIZE, stdin);
+
+		if (!strcmp(message, "q\n") || !strcmp(message, "Q\n"))
+			break;
+
+		send(hSocket, message, strlen(message), 0);
+		strLen = recv(hSocket, message, BUF_SIZE - 1, 0);
+		message[strLen] = 0;
+		printf("Message from server: %s", message);
+	}
+
+	closesocket(hSocket);
+	WSACleanup();
+	return 0;
+}
+
+void ErrorHandling(const char *message)
+{
+	fputs(message, stderr);
+	fputc('\n', stderr);
+	exit(1);
+}
 ```
 
 ## 套接字类型和协议设置
@@ -223,7 +287,7 @@ char * inet_ntoa(struct in_addr adr)
 ### 网络地址的初始化
 ```c
 struct sockaddr_in addr;
-char * serv_ip = "211.217.168.13";//ip
+char * serv_ip = "118.24.137.128";//ip
 char * serv_port = "9090";//端口字符串
 memset(&addr,0,sizeof (serv_addr));//所有成员初始化为0
 addr.sin_family=AF_INET;//指定地址族
