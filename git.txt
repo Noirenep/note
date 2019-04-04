@@ -189,3 +189,7 @@ git diff -cached 比较尊新提交和暂存区的区别
    git pull
    删除远程标签
    git push origin :ref/tags/V6.0
+
+统计代码行数 
+git log --author="xuehu96" --pretty=tformat: --numstat | awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s, removed lines: %s, total lines: %s\n", add, subs, loc }' -
+
