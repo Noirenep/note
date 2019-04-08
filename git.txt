@@ -63,6 +63,11 @@ git reflog
 *.a #忽略所有.a文件
 !lib.a #lib.a除外
 build/ #忽略build/目录下所有文件
+删除已经追踪的代码 重新追踪
+git rm -r --cached .
+git add .
+git commit -m 'update .gitignore'
+
 
 分支
 git branch 分支名 创建分支
