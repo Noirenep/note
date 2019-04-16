@@ -31,4 +31,35 @@ using std::cout;
 或者
 using namespace std;//导入名称空间的所有名称
 
+### 显示类型转换
+`static_cast<type> (表达式)`
 
+### 变量的生存期
+三种:
+- auto自动变量,从定义到块的结束
+- static变量,从定义到程序结束
+- 运行时分配的变量
+
+
+## 第四章
+### 条件运算符
+```c
+c = a > b ? a : b;
+//等价于
+if(a > b)
+{
+    c = a;
+}
+else
+{
+    c = b;
+}
+
+```
+
+## 一些函数
+
+```c
+#include <cmath>  //三角函数 数值函数 abs sin co asin
+
+```
