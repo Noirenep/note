@@ -57,6 +57,59 @@ else
 
 ```
 
+## 第5章 数组
+### 数组的替代品
+STL中定义了数组  
+std::array<T,N> 和 std::vector<T>+0
+
+### array<>
+`#include <array>`   //For array<T,N>  
+array不需要额外的系统开销 推荐使用  
+只要array<>存储相同数量 类型的元素,就可以把一个array<>赋值给另一个array<>容器
+```c
+double total{};
+for(size_t i {}, i< value.size(); ++i)
+{
+    total += values[i];
+    total += values.at(i);//会检查安全性
+        //如果超出范围 会抛出std::out_of_range类型的异常
+}
+
+for(auto value : values)
+{
+    total += value;
+}
+```
+### vector
+`#include <vector>`  //For vector<T>  
+大小可以自动增加
+
+std::vector<double> values;  
+values.push_back(3.14159);
+
+## 第六章 指针
+>指针 = 地址+数据类型
+
+### char类型的指针
+`const char * pchar {"Hello world."}`
+
+### 指针数组
+
+### 常量指针和指向常量的指针
+1. 指向常量的指针.  
+    指针指向的内容不能改变,指针可以设置为指向其他内容  
+    `const char* pstring {"some text that cannot be changed"}`  
+    例如:`const int* pvalue{&value};`
+2. 常量指针 
+    指针的地址不能改变,地址的内容可以改变  
+    `int* const pdata{&data};`
+3. 指向常量的常量指针  
+    都不能修改  
+    `const int* const pvalue{&value}`
+
+
+
+
 ## 一些函数
 
 ```c
