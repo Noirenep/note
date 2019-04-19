@@ -176,8 +176,139 @@ int main()
 }
 ```
 
+### 消息队列
+>消息队列的有关系统调用包括:msgget()、msgsnd()、msgrcv()、msgctl()
+- msgget
+```c
+int //成功 返回消息队列的标识符  失败-1
+msgsnd(
+    key_t key,//消息队列键值
+    int msgflg//创建方式或权限
+);
+```
 
+- msgsnd
+```c
+int //成功0 失败-1
+msgsnd(
+    int msgid,//消息标识id
+    struct msgbuf *msgp,//缓冲区的指针
+    int msgsz,//消息文本的大小,不包含消息类型
+                //(sizeof(struct buf)-sizeof(long))
+    int msgflg//0 写不进去会挂起 还可以设置为IPC_NOWAIT
+);
+```
+- msgrcv
+```c
+int //成功0 失败-1
+msgrcv(
+    int msgid,//消息标识id
+    struct msgbuf *msgp,//缓冲区的指针
+    int msgz,//消息文本的大小,不包含消息类型
+    long mtype,//0为驻留队列时间最长的那条消息 无论是什么类型
+    int msgflg //0为一直阻塞  IPC_NOWAIT没消息可读立即返回-1
+);
+```
+- msgctl
+```c
+int //成功0 失败-1
+msgctl(
+    int msgid,//消息标识id
+    int cmd,//IPC_RMID 删除消息队列 相当于"ipcrm -q id"
+            //IPC_STAT 获取消息的详细信息 权限 时间 id等
+            //IPC_SET 设置消息队列的信息
+    struct msgqid_ds *buf//存放消息队列状态的指针
+);
+```
+程序例子:  
+>编写一段程序，使其用消息缓冲队列来实现父进程和子进程之间的通信。父进程先建立一个关键字为MSGKEY(如75)（即#define MSGKEY 75）的消息队列，然后等待接收类型为1的消息；在收到请求消息后，它便显示字符串“serving for client ”和接收到的子进程的进程标识数，表示正在为子进程服务；然后再向子进程发送一应答消息，该消息的类型是该子进程的进程标识数，而正文则是父进程自己的标识数。子进程则向消息队列发送类型为1的消息(消息的正文为自己的进程标识数)，以取得父进程的服务，并等待父进程发来的应答；然后显示字符串“receive reply from ”和接收到的父进程的标识数。
+```c
+ /*消息的结构为：*/
+struct msgform{
+   long mtype;       //消息类型
+   char mtext[1024];  //消息正文
+};
+```
 
+程序代码:
+```c
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/msg.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <wait.h>
 
+#define MSGKEY 78
 
+/*消息的结构为：*/
+struct msgform{
+    long mtype;       //消息类型
+    char mtext[1024];  //消息正文
+};
 
+int main()
+{
+    int pid,msgid;
+    pid = fork();
+
+    if(pid == 0)
+    {
+        //子进程
+        //创建一个消息队列
+        msgid = msgget((key_t)MSGKEY,IPC_CREAT|S_IRUSR|S_IWUSR);
+        if(msgid == -1)
+        {
+            perror("子进程msgget error!");
+            exit(-1);
+        }
+
+        //给父进程发送消息
+        struct msgform msg;
+        msg.mtype=1;
+        sprintf(msg.mtext,"%d",getpid());
+        msgsnd(msgid,&msg, sizeof(msg),0);
+
+        //接收回复消息
+        struct msgform recvmsg;
+        msgrcv(msgid,&recvmsg, sizeof(recvmsg),getpid(),0);
+        printf("receive reply from:pid = %s\n", recvmsg.mtext);
+
+    }
+    else if(pid > 0)
+    {
+        //父进程
+        msgid = msgget((key_t)MSGKEY,IPC_CREAT|S_IRUSR|S_IWUSR);
+        if(msgid == -1)
+        {
+            perror("父进程msgget error!");
+            exit(-1);
+        }
+        //接收请求消息
+        struct msgform recvmsg;
+        msgrcv(msgid,&recvmsg, sizeof(recvmsg),0,0);
+
+        if(recvmsg.mtype==1)
+        {
+            printf("serving for client :pid = %s\n",recvmsg.mtext);
+
+            //向子进程发送消息
+            struct msgform msg;
+            msg.mtype=atoi(recvmsg.mtext);
+            sprintf(msg.mtext,"%d",getpid());
+            msgsnd(msgid,&msg, sizeof(msg),0);
+
+            wait(0);
+            //删除消息队列
+            msgctl(msgid,IPC_RMID,NULL);
+        }
+    }
+    else
+    {
+        perror("fork error!\n");
+        exit(-1);
+    }
+    return 0;
+}
+```
