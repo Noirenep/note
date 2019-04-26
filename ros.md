@@ -396,7 +396,7 @@ int main(int argc, char **argv)
 ```
 
 ### 修改CMakelist
-Shift+h Shift+a  
+Shift+g Shift+a  
 添加下面内容
 ```cmake
 add_executable(server src/server.cpp)
@@ -730,6 +730,26 @@ $ rosrun test_service_rospy pyserver.py   #Python
 ```sh
 $ rosrun test_service_rospy pyclient.py   #Python
 ``` 
+
+
+## action
+修改Cmakelist
+```cmake
+find_package(
+    actuionlib_mags
+)
+
+add_action_file(
+    FILES
+    Name.action
+)
+
+generate_messages(  
+    DEPENDENCIES    
+    std_msgs                                                  
+    actionlib_mags
+)
+```
 
 
 
