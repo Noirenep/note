@@ -107,8 +107,40 @@ values.push_back(3.14159);
     都不能修改  
     `const int* const pvalue{&value}`
 
+### 引用
+假定定义了变量:  
+double data {3.5};  
+就可以定义一个左值引用,作为变量 data的别名   
+double& rdata{data}; //Defomnes a reference to the variable data  
+rdata += 2.5;
 
+## 第七章 操作字符串
+### 更好的丝捶英类型
+首先 要定义头文件`#include <string>`  
+string类型是有一个类模板定义  
 
+### 定义string对象
+1. 没有初始化列表(或者空对象)  
+    string empty;
+2. 初始化列表包含字符串字面量  
+    string proverb {"Helloworld."};
+3. 初始化列表包含已有的string对象  
+    string sentence{ proverb };  
+4.  初始化列表包含两个初始器 一个是字符串常量 一个是字面量用于初始化string对象的字符长度  
+    string part_literal {"Helloworld",5};//Hello
+5. 重复次数和字符字面量 比如6个z  
+    string sleeping {6,'z'};
+6. 初始化列表包含3个初始化器 一个是已有的string对象,一个是开头的索引,一个是字符串长度
+    string phrase {proverb,0,5} ; //Hello
+
+### string 对象的操作
+- 赋值:  
+string word{"rubbish"};  
+word = "adjective"
+- 连接字符串:  
+string description{sleeping + " " +word + "whippersnapper"};
+>注意:不能连续连接两个字符串字面量
+- 访问
 
 ## 一些函数
 
