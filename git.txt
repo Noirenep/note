@@ -31,6 +31,12 @@ git remote set-url --add origin git@gitee.com:xuehu96/note.git
 提交不同名称
 拉取git checkout -b dev2 origin/dev2
 删除git push origin --delete develop
+
+分支合并
+git checkout master
+git pull (git pull origin master)看看远程有没有修改 有就先拉回来
+git merge dev2
+git push origin master 推到远端库
 ###########################################################
 
 获得版本库
