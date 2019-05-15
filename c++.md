@@ -54,9 +54,71 @@ inline
 3. 内联省去了普通函数调用时的压栈,跳转和返回的开销
 
 ### 默认参数和占位参数
+```c++
+int fun(int a,int b = 3){}//默认参数
+int fun(int a,int b,int){}//占位参数
+int fun(int a,int b,int=0){}//默认参数+占位参数
+```
+占位参数调用时必须写上参数
 
-类的封装
-面向过程到面向对象
+### 函数重载
+> 函数名和不同参数搭配  
+函数重载是在静态编译时  
+**函数的返回值不是重载判断的标准**
+
+函数重载不能存在二义性(默认参数)
+
+### 函数重载和函数指针在一起
+>会严格比配函数指针的数据类型和候选者的数据类型
+```c++
+void myfunc(int a)
+{
+    printf("a:%d \n",a);
+}
+
+void myfunc(char* p)
+{
+    printf("p:%s \n",p);
+}
+
+void myfunc(int a,int b)
+{
+    printf("a:%d b:%d \n",a,b);
+}
+
+void myfunc(char* p1,char*  p2)
+{
+    printf("p1:%s p2:%s \n",p1,p2);
+}
+//1.声明一个函数类型
+//void myfunc(int a,int b)
+typedef void myTypeFunc(int a,int b);
+//myTypeFunc* myfuncp = NULL;//通过函数类型定义函数指针变量
+
+//2.声明一个函数指针类型
+typedef void (* myPTypeFunc)(int a,int b);
+//2.定义一个函数指针变量
+//myPTypeFunc fp = NULL;通过函数指针类型定义一个函数指针
+
+//直接定义函数指针变量
+void (*myVarPFunc)(int a,int b);
+
+int main()
+{
+    myPTypeFunc fp = NULL;//定义了一个函数指针变量,指向函数入口地址
+
+    fp = myfunc;
+
+    fp(1);//参数不对
+
+
+    return 0;
+}
+```
+
+## 08 TODO
+
+
 ---
 # C++入门
 
