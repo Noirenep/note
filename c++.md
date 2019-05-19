@@ -235,13 +235,66 @@ private:
 }
 ```
 全局函数(友元函数)  
+`Complex operator+(Complex &c1,Complex &c2);`  
 成员函数(具有this指针)  
+`public: Complex operator-(Complex &c2);`  
 成员函数比全局函数少一个参数  
 
 根据需要,看函数返回引用,指针还是元素
 
+### 一元运算符重载
+```c++
+//全局 前置++
+friend Complex& operator++(Complex &c1);
 
->TODO  11_中午
+//用成员函数 重载前置--
+public:
+Complex& operator--()
+{
+    this->a --;
+    this->b --;
+    return *this;
+}
+```
+
+```c++
+//全局  后置++
+friend Complex operator++(Complex &c1,int);
+//新拷贝一个  返回 然后再++
+
+//成员函数 后置--
+public:
+Complex operator--(int)
+{
+    Complex tmp = *this;
+    this->a--;
+    this->b--;
+    return tmp;
+}
+```
+
+输入输出流 只能使用友元全局函数  
+`friend ostream& operator <<(ostream &out ,Complex &c1);`  
+> `>>   << 运算符`  结合顺序:从左到右
+
+函数返回值当左值需要返回一个引用
+
+### operator=
+>等号操作符 从右到左  
+`类名& operator=(类名 &obj)`  
+释放旧内存,  
+分配新内存,  
+复制内容.  
+return *this 
+
+### operator[]
+`int& operator[](int i)`
+
+### operator==
+`bool operator==(类名& obj)`
+
+
+## day05
 
 ---
 # C++入门
