@@ -442,10 +442,3 @@ word = "adjective"
 string description{sleeping + " " +word + "whippersnapper"};
 >注意:不能连续连接两个字符串字面量
 - 访问
-
-## 一些函数
-
-```c
-#include <cmath>  //三角函数 数值函数 abs sin co asin
-
-```
