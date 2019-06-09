@@ -75,7 +75,64 @@ gcc 1.o -o 1.exe
 > day09_09
 
 ## 类模板
+### 单个类的语法
+```cpp
+template <typename T>
+class A
+{
+public:
+	A(T a)
+	{
+		this->a = a;
+	}
 
+	void printA()
+	{
+		cout << "a: " << a << endl;
+	}
+
+private:
+	T a;
+};
+
+```
+### 模板类继承
+//从模板类派生普通类
+```c++
+class B :public  A<int>
+{
+public:
+	B(int a = 20, int b=10) :A<int>(a)
+	{
+		this->b = b;
+	}
+	void printB()
+	{
+		cout << "a: " << a << "  B: " << b << endl;
+	}
+private:
+	int b;
+};
+```
+
+//从模板类派生模板类
+```c++
+template<typename T>
+class C :public A<T>
+{
+public:
+	C(T c, T a) :A<T>(a)
+	{
+		this->c = c;
+	}
+	void printC()
+	{
+		cout <<"c: "<< c << endl;
+	}
+private:
+	T c;
+};
+```
 
 
 ## C++的类型转换

@@ -18,9 +18,66 @@ public:
 		cout << "a: " << a << endl;
 	}
 
-private:
+protected:
 	T a;
 };
+
+
+//从模板类派生模板类
+template<typename T>
+class C :public A<T>
+{
+public:
+	C(T c, T a) :A<T>(a)
+	{
+		this->c = c;
+	}
+	void printC()
+	{
+		cout <<"c: "<< c << endl;
+	}
+private:
+	T c;
+};
+
+int main()
+{
+
+	C<int > c1(3, 5);
+	c1.printA();
+	c1.printC();
+	return 0;
+}
+
+
+
+//子模版派生时,需要具体化模板类,C++编译器要知道服了就的数据类型是什么样子的
+//要知道父类所占的内存大小是多少,只有数据类型固定下来才知道如何分配内存
+
+//从模板类派生普通类
+class B :public  A<int>
+{
+public:
+	B(int a = 20, int b=10) :A<int>(a)
+	{
+		this->b = b;
+	}
+	void printB()
+	{
+		cout << "a: " << a << "  B: " << b << endl;
+	}
+private:
+	int b;
+};
+
+int main02()
+{
+	B b1(1,2);
+	b1.printB();
+	
+	return 0;
+}
+
 
 //类模板的定义
 //类模板的使用
@@ -32,7 +89,7 @@ void UseA( A<int> &a)
 	a.printA();
 }
 
-int main()
+int main01()
 {
 	//A a1(21);//模板类是抽象的,需要具体化 
 	A<int> a1(33),a2(22),a3(66);
