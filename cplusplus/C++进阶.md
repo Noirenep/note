@@ -97,6 +97,9 @@ private:
 
 ```
 ### 模板类继承
+
+代码: [类模板基本语法.cpp](./src/test/类模板基本语法.cpp)
+
 //从模板类派生普通类
 ```c++
 class B :public  A<int>
@@ -121,7 +124,7 @@ template<typename T>
 class C :public A<T>
 {
 public:
-	C(T c, T a) :A<T>(a)
+	C(T c, T a) :A<T>(a) //显示调用父类构造函数
 	{
 		this->c = c;
 	}
